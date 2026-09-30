@@ -1,172 +1,190 @@
-# ASR-Tool: Offline Automatic Speech Recognition
+<div align="center">
 
-[![License: MIT](https://img.shields.org/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python Version](https://img.shields.org/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![Framework](https://img.shields.org/badge/ASR-faster--whisper-indigo.svg)](https://github.com/SYSTRAN/faster-whisper)
-[![Web Interface](https://img.shields.org/badge/UI-Streamlit-red.svg)](https://streamlit.io/)
+# 🎙️ ASR-Tool: Automatic Speech Recognition System
 
-**ASR-Tool** is a high-performance, university-project Automatic Speech Recognition application that transcribes speech audio into accurate text completely offline—with **zero external or paid API key dependencies**. Built with Python, `faster-whisper` (C++ CTranslate2 engine), and `Streamlit`, ASR-Tool delivers fast transcription with word-level timestamps, language detection, and multi-format exports (.txt, .srt, .json).
+**A production-quality, offline speech-to-text transcription engine & web application.**
 
----
-
-## 📸 Web UI Preview
-
-![ASR-Tool Web UI](docs/screenshot_ui.png)
+[![Python Version](https://img.shields.org/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![faster-whisper](https://img.shields.org/badge/Engine-faster--whisper-6f42c1?style=for-the-badge&logo=openai&logoColor=white)](https://github.com/SYSTRAN/faster-whisper)
+[![Streamlit](https://img.shields.org/badge/UI-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![License: MIT](https://img.shields.org/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![Build Status](https://img.shields.org/badge/Tests-17%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](docs/test_results.txt)
 
 ---
 
-## ✨ Features List
+[Key Features](#-key-features) •
+[Web Interface](#-web-interface-preview) •
+[Architecture](#-system-architecture) •
+[Quickstart](#-quickstart-guide) •
+[CLI Usage](#-cli-usage) •
+[Evaluation](#-accuracy--wer-evaluation) •
+[Author](#-author--acknowledgments)
 
-- 🎧 **Multi-Format Audio Transcribing**: Supports `.wav`, `.mp3`, `.m4a`, `.flac`, and `.ogg`.
-- 🎤 **Live Microphone Recording**: Built-in browser audio recorder for instant transcription.
-- ⚡ **Offline Whisper Models**: Switch between `tiny`, `base`, `small`, and `medium` models locally.
-- 🌐 **Auto Language Detection**: Detects over 99 languages with confidence scoring.
-- ⏱️ **Timestamp Segmentation**: Precise segment-level start/end timestamps.
-- 💾 **Multi-Format Exporters**: Save outputs as Plain Text (`.txt`), Subtitle (`.srt`), or Structured (`.json`).
-- 📊 **Performance Analytics**: Displays real-time audio duration and processing execution time.
-- 💻 **CLI & Web UI**: Command-Line Interface for automated batch scripts and Streamlit dashboard for interactive use.
-- 📈 **Evaluation Suite**: Built-in evaluation tool to compute Word Error Rate (WER) and Character Error Rate (CER) via `jiwer`.
-- 🛡️ **Robust Error Handling**: Handles corrupted files, missing dependencies, unsupported formats, and model loading errors cleanly with structured logging.
+</div>
+
+<br/>
+
+## 📌 Overview
+
+**ASR-Tool** is an offline, privacy-first Automatic Speech Recognition app built for high accuracy, speed, and zero paid API dependencies. Powered by OpenAI's Whisper model via the optimized CTranslate2 engine (`faster-whisper`), ASR-Tool transcribes multi-format audio files (.wav, .mp3, .m4a, .flac, .ogg) and live microphone recordings into plain text, timestamped subtitles (.srt), and structured metadata (.json).
+
+Whether you need a sleek browser interface or an automated command-line tool for pipeline processing, **ASR-Tool** provides an all-in-one solution.
 
 ---
 
-## 🛠️ Tools & Technologies Used
+## 📸 Web Interface Preview
 
-| Tool / Library | Purpose |
+![ASR-Tool Web Interface](docs/screenshot_ui.png)
+
+> *Modern glassmorphism dashboard featuring real-time audio playback, customizable model sizes, language auto-detection, timestamp segment tables, and multi-format file exports.*
+
+---
+
+## ✨ Key Features
+
+| Feature | Description |
 | :--- | :--- |
-| **Python 3.10+** | Core programming environment |
-| **faster-whisper** | CTranslate2-accelerated Whisper model inference engine |
-| **Streamlit** | Modern interactive web UI framework |
-| **pydub & FFmpeg** | Audio normalization, resampling to 16kHz mono WAV, and duration calculation |
-| **jiwer** | Word Error Rate (WER) and Character Error Rate (CER) calculation |
-| **pytest** | Automated unit and integration testing suite |
-| **python-dotenv** | Optional environment configuration loading |
+| 🔒 **100% Offline & Free** | Zero external API calls, zero subscription fees, and complete data privacy. |
+| ⚡ **Faster-Whisper Engine** | Accelerated CTranslate2 execution offering up to **4x faster** transcription than standard PyTorch models. |
+| 🎛️ **Configurable Models** | Switch dynamically between `tiny`, `base`, `small`, and `medium` model sizes depending on speed and accuracy needs. |
+| 🌐 **Multi-Language Auto-Detect** | Automatically recognizes spoken language across 99+ languages with confidence probability scores. |
+| ⏱️ **Word/Segment Timestamps** | Generates precise millisecond-level subtitle timestamps (`HH:MM:SS,mmm`). |
+| 🎤 **Browser Mic Recording** | Record audio directly in the web UI using native browser input (`st.audio_input`). |
+| 📦 **Multi-Format Exporters** | One-click export to **Plain Text (`.txt`)**, **SubRip Subtitles (`.srt`)**, and **JSON (`.json`)**. |
+| 💻 **Robust Argparse CLI** | Full command-line interface for headless execution and automated shell scripts. |
+| 📊 **WER / CER Evaluator** | Evaluate transcription accuracy against ground-truth text using `jiwer`. |
 
 ---
 
-## 🏗️ Architecture & How It Works
-
-ASR-Tool receives audio from either the CLI or Web UI, validates and normalizes the input file to 16kHz mono WAV using `pydub`/`wave`, converts the signal into a normalized float32 array, and passes it to `faster-whisper`. The model performs speech recognition, segmenting, and timestamp generation, returning a structured `TranscriptionResult`.
+## 🏗️ System Architecture
 
 ```
-                  +-----------------------+
-                  | Audio Source (File/Mic)|
-                  +-----------+-----------+
-                              |
-                              v
-                  +-----------------------+
-                  |  asr_tool.audio_utils | (Format Validation & 16kHz WAV Conversion)
-                  +-----------+-----------+
-                              |
-                              v
-                  +-----------------------+
-                  | asr_tool.transcriber  | (WhisperTranscriber Model Inference)
-                  +-----------+-----------+
-                              |
-                              v
-                  +-----------------------+
-                  |   TranscriptionResult | (Text, Segments, Language, Timestamps)
-                  +-----+-----------+-----+
-                        |           |
-        +---------------+           +---------------+
-        v                                           v
-+---------------+                           +---------------+
-| asr_tool.cli  |                           | app.py        | (Streamlit Dashboard)
-+---------------+                           +---------------+
+                                    +--------------------------------+
+                                    | Audio File (.wav/.mp3/etc.)    |
+                                    | OR Live Browser Microphone     |
+                                    +---------------+----------------+
+                                                    |
+                                                    v
+                                    +---------------+----------------+
+                                    |   asr_tool.audio_utils         |
+                                    | - Format Validation            |
+                                    | - FFmpeg / Pydub Conversion    |
+                                    | - 16kHz Mono Float32 Resampling|
+                                    +---------------+----------------+
+                                                    |
+                                                    v
+                                    +---------------+----------------+
+                                    |   asr_tool.transcriber         |
+                                    | - WhisperTranscriber Class     |
+                                    | - faster-whisper Model Load    |
+                                    | - CTranslate2 Parallel Infer   |
+                                    +---------------+----------------+
+                                                    |
+                                                    v
+                                    +---------------+----------------+
+                                    |      TranscriptionResult       |
+                                    | - Full Text & Segment Objects  |
+                                    | - Duration & Performance Time  |
+                                    | - Language & Confidence Score  |
+                                    +-------+----------------+-------+
+                                            |                |
+                     +----------------------+                +----------------------+
+                     |                                                              |
+                     v                                                              v
++--------------------+-----------+                                +-----------------+---------+
+| asr_tool.cli                   |                                | app.py                    |
+| - CLI Transcribe Command       |                                | - Streamlit Web Dashboard |
+| - CLI Evaluate Command         |                                | - Interactive Downloads   |
++--------------------------------+                                +---------------------------+
 ```
 
 ---
 
-## 📋 Prerequisites
+## ⚙️ Prerequisites
 
-- **Python 3.10** or higher installed.
-- **FFmpeg**: Required for audio format conversion.
-  - **Windows**: Included automatically via `imageio-ffmpeg` package, or install via `winget install ffmpeg` / `choco install ffmpeg`.
-  - **macOS**: `brew install ffmpeg`
-  - **Linux (Ubuntu/Debian)**: `sudo apt update && sudo apt install ffmpeg`
+Before installing ASR-Tool, ensure you have the following installed:
+
+1. **Python 3.10 or higher** (`python --version`)
+2. **FFmpeg** (Required for audio decoding and format conversions):
+   - 🪟 **Windows**: Included automatically via Python `imageio-ffmpeg` package, or install via Winget:
+     ```powershell
+     winget install ffmpeg
+     ```
+   - 🍎 **macOS**:
+     ```bash
+     brew install ffmpeg
+     ```
+   - 🐧 **Linux (Ubuntu/Debian)**:
+     ```bash
+     sudo apt update && sudo apt install -y ffmpeg
+     ```
 
 ---
 
-## 📥 Installation
+## 🚀 Quickstart Guide
+
+### 1. Clone & Set Up Environment
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/asr-tool.git
-cd asr-tool
+# Clone the repository
+git clone https://github.com/Brijeshv3001/ASR-Tool---Speech-Recognition.git
+cd ASR-Tool---Speech-Recognition
 
-# 2. Create and activate a virtual environment
-# Windows (PowerShell)
+# Create a virtual environment
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
 
-# macOS/Linux
-python3 -m venv .venv
+# Activate the virtual environment
+# On Windows (PowerShell):
+.\.venv\Scripts\Activate.ps1
+# On macOS/Linux:
 source .venv/bin/activate
 
-# 3. Install required dependencies
+# Install dependencies
 pip install -r requirements.txt
 ```
 
----
+### 2. Launch the Web Interface
 
-## 🚀 How to Run
-
-### 1. Web Application (Streamlit)
 ```bash
 streamlit run app.py
 ```
-Open [http://localhost:8501](http://localhost:8501) in your web browser.
+Open your browser at `http://localhost:8501` to use the interactive dashboard!
 
-### 2. Command Line Interface (CLI)
+---
 
-**Basic Text Transcription:**
+## 💻 CLI Usage
+
+ASR-Tool features a powerful CLI for automated speech processing tasks.
+
+### 1. Transcribe Audio File to Plain Text
 ```bash
-python -m asr_tool.cli transcribe samples/sample.wav --model base --language en --format txt --output output.txt
+python -m asr_tool.cli transcribe audio.wav --model base --language en --format txt --output result.txt
 ```
 
-**Generate SRT Subtitles:**
+### 2. Generate Subtitles (.srt) with Auto Language Detection
 ```bash
-python -m asr_tool.cli transcribe audio.mp3 --model base --language auto --format srt --output subtitle.srt
+python -m asr_tool.cli transcribe lecture.mp3 --model small --language auto --format srt --output subtitle.srt
 ```
 
-**Export All Formats (.txt, .srt, .json):**
+### 3. Export All Formats (.txt, .srt, .json) Simultaneously
 ```bash
-python -m asr_tool.cli transcribe audio.wav --model small --format all --output results/
-```
-
-### 3. Running Unit & Integration Tests
-```bash
-python -m pytest -v
-```
-
-### 4. Running Transcription Evaluation (WER / CER)
-```bash
-python -m asr_tool.cli evaluate --hypothesis output.txt --reference samples/sample_ref.txt --output docs/evaluation_metrics.json
+python -m asr_tool.cli transcribe interview.m4a --model medium --format all --output exports/
 ```
 
 ---
 
-## 📄 Example Outputs
+## 📈 Accuracy & WER Evaluation
 
-### Plain Text (`.txt`)
+Evaluate transcript precision against ground-truth reference transcripts using the built-in evaluation command:
+
+```bash
+python -m asr_tool.cli evaluate --hypothesis samples/output_sample.txt --reference samples/sample_ref.txt --output docs/evaluation_metrics.json
+```
+
+### 🧪 Automated Test Suite Results
+All unit and integration tests are verified passing:
+
 ```text
-Welcome to Automatic Speech Recognition Tool offline test.
-```
-
-### SubRip Subtitles (`.srt`)
-```srt
-1
-00:00:00,000 --> 00:00:02,000
-Welcome to Automatic Speech Recognition Tool offline test.
-```
-
----
-
-## 📊 Test Results & WER Summary
-
-### Automated Test Suite Execution Log
-`pytest -v` output saved at `docs/test_results.txt`:
-```
 tests/test_audio_utils.py::test_find_ffmpeg_executable PASSED            [  5%]
 tests/test_audio_utils.py::test_validate_audio_file_nonexistent PASSED   [ 11%]
 tests/test_audio_utils.py::test_validate_audio_file_empty PASSED         [ 17%]
@@ -190,52 +208,55 @@ tests/test_transcriber.py::test_transcriber_integration_tiny PASSED      [100%]
 
 ---
 
-## 📂 Project Structure Tree
+## 📂 Project Structure
 
 ```
-asr-tool/
-├── asr_tool/
+ASR-Tool---Speech-Recognition/
+├── asr_tool/               # Core Python Package
 │   ├── __init__.py         # Package initialization
-│   ├── transcriber.py      # Core WhisperTranscriber class & dataclasses
-│   ├── audio_utils.py      # Format validation, 16kHz WAV conversion & numpy loader
-│   ├── exporters.py        # TXT, SRT, JSON exporters & timestamp formatter
-│   ├── evaluate.py         # WER & CER metrics using jiwer
+│   ├── transcriber.py      # Core WhisperTranscriber & Dataclasses
+│   ├── audio_utils.py      # Audio validation, 16kHz resampling & float32 array converter
+│   ├── exporters.py        # TXT, SRT, JSON exporters & timestamp formatters
+│   ├── evaluate.py         # WER & CER calculations via jiwer
 │   └── cli.py              # Argparse CLI interface
-├── app.py                  # Streamlit Web UI application
-├── tests/
-│   ├── conftest.py         # Fixtures & synthetic WAV audio generator
-│   ├── test_audio_utils.py # Audio utility unit tests
-│   ├── test_exporters.py   # Exporter unit tests
-│   ├── test_evaluate.py    # WER evaluation unit tests
-│   └── test_transcriber.py # Model integration tests
-├── samples/
-│   ├── sample.wav          # Sample audio file
-│   └── sample_ref.txt      # Sample reference transcript
-├── docs/
-│   ├── test_results.txt    # Pytest execution log
-│   ├── screenshot_ui.png   # Web UI application screenshot
-│   └── evaluation_metrics.json # Evaluation output
-├── requirements.txt        # Project python dependencies
+├── app.py                  # Streamlit Web UI Application
+├── tests/                  # Pytest Unit & Integration Test Suite
+│   ├── conftest.py         # Programmatic WAV audio generator fixtures
+│   ├── test_audio_utils.py # Audio validation & conversion tests
+│   ├── test_exporters.py   # Exporter format tests
+│   ├── test_evaluate.py    # WER evaluation tests
+│   └── test_transcriber.py # Whisper model integration tests
+├── samples/                # Sample audio clips & reference transcripts
+├── docs/                   # UI Screenshots, test logs & evaluation reports
+│   ├── screenshot_ui.png
+│   ├── test_results.txt
+│   └── evaluation_metrics.json
+├── requirements.txt        # Production dependency specifications
 ├── .gitignore              # Git ignore rules
-├── LICENSE                 # MIT License
+├── LICENSE                 # MIT Open Source License
 └── README.md               # Documentation
 ```
 
 ---
 
-## 🔮 Limitations & Future Improvements
+## 🔮 Limitations & Roadmap
 
-- **Real-Time Streaming Speech Recognition**: Currently handles chunked/recorded audio files; future versions will integrate PyAudio for live low-latency microphone streaming.
-- **Speaker Diarization**: Integration with `pyannote.audio` to identify "Who spoke when".
-- **Advanced Noise Reduction**: Adding `noisereduce` preprocessing filter for noisy environments.
-- **Model Quantization Options**: Exposing custom INT8 / FP16 GPU compute settings in the UI.
+- **Live Streaming Audio**: Current release processes full audio segments; streaming chunk recognition is planned for v1.1.
+- **Speaker Diarization**: Multi-speaker identification via `pyannote.audio` integration coming soon.
+- **Background Noise Filtering**: Additional preprocessing using spectral gating (`noisereduce`).
 
 ---
 
-## 📜 License & Author
+## 👤 Author & Acknowledggments
 
-Distributed under the **MIT License**. See `LICENSE` for details.
+**Developed by Brijesh** ([@Brijeshv3001](https://github.com/Brijeshv3001))  
+*University Project for Automatic Speech Recognition & Audio Processing.*
 
-**Author**: [Your Name Here]  
-**University / Course**: Computer Science & Engineering - Speech Recognition Project  
-**GitHub**: [https://github.com/your-username](https://github.com/your-username)
+- Model Inference powered by [OpenAI Whisper](https://github.com/openai/whisper) & [faster-whisper](https://github.com/SYSTRAN/faster-whisper).
+- Web Interface built with [Streamlit](https://streamlit.io/).
+
+---
+
+<div align="center">
+  <b>⭐ If you find this project helpful, consider giving it a star on GitHub! ⭐</b>
+</div>
