@@ -1,0 +1,25 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.14, pytest-9.1.1, pluggy-1.6.0
+rootdir: D:\biju SRM\Speech Recog
+plugins: anyio-4.15.1
+collected 17 items
+
+tests/test_audio_utils.py::test_find_ffmpeg_executable PASSED            [  5%]
+tests/test_audio_utils.py::test_validate_audio_file_nonexistent PASSED   [ 11%]
+tests/test_audio_utils.py::test_validate_audio_file_empty PASSED         [ 17%]
+tests/test_audio_utils.py::test_validate_audio_file_unsupported PASSED   [ 23%]
+tests/test_audio_utils.py::test_validate_audio_file_success PASSED       [ 29%]
+tests/test_audio_utils.py::test_get_audio_duration PASSED                [ 35%]
+tests/test_audio_utils.py::test_convert_to_wav_16k_mono PASSED           [ 41%]
+tests/test_evaluate.py::test_evaluate_perfect_match PASSED               [ 47%]
+tests/test_evaluate.py::test_evaluate_partial_match PASSED               [ 52%]
+tests/test_evaluate.py::test_evaluate_empty_reference PASSED             [ 58%]
+tests/test_evaluate.py::test_evaluate_empty_hypothesis PASSED            [ 64%]
+tests/test_exporters.py::test_format_timestamp PASSED                    [ 70%]
+tests/test_exporters.py::test_export_txt PASSED                          [ 76%]
+tests/test_exporters.py::test_export_srt PASSED                          [ 82%]
+tests/test_exporters.py::test_export_json PASSED                         [ 88%]
+tests/test_transcriber.py::test_transcriber_invalid_model PASSED         [ 94%]
+tests/test_transcriber.py::test_transcriber_integration_tiny PASSED      [100%]
+
+======================== 17 passed in 2.40s ========================
