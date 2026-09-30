@@ -4,13 +4,11 @@
 
 **A production-quality, offline speech-to-text transcription engine & web application.**
 
-[![Python Version](https://img.shields.org/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![faster-whisper](https://img.shields.org/badge/Engine-faster--whisper-6f42c1?style=for-the-badge&logo=openai&logoColor=white)](https://github.com/SYSTRAN/faster-whisper)
-[![Streamlit](https://img.shields.org/badge/UI-Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
-[![License: MIT](https://img.shields.org/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
-[![Build Status](https://img.shields.org/badge/Tests-17%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](docs/test_results.txt)
+<br/>
 
----
+` Python 3.10+ ` &nbsp;•&nbsp; ` faster-whisper ` &nbsp;•&nbsp; ` Streamlit UI ` &nbsp;•&nbsp; ` MIT Licensed ` &nbsp;•&nbsp; ` 17/17 Tests Passed `
+
+<br/>
 
 [Key Features](#-key-features) •
 [Web Interface](#-web-interface-preview) •
@@ -34,7 +32,11 @@ Whether you need a sleek browser interface or an automated command-line tool for
 
 ## 📸 Web Interface Preview
 
-![ASR-Tool Web Interface](docs/screenshot_ui.png)
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Brijeshv3001/ASR-Tool---Speech-Recognition/main/docs/screenshot_ui.png" alt="ASR-Tool Web Interface" width="100%" />
+</div>
+
+<br/>
 
 > *Modern glassmorphism dashboard featuring real-time audio playback, customizable model sizes, language auto-detection, timestamp segment tables, and multi-format file exports.*
 
@@ -247,7 +249,7 @@ ASR-Tool---Speech-Recognition/
 
 ---
 
-## 👤 Author & Acknowledggments
+## 👤 Author & Acknowledgments
 
 **Developed by Brijesh** ([@Brijeshv3001](https://github.com/Brijeshv3001))  
 *University Project for Automatic Speech Recognition & Audio Processing.*
