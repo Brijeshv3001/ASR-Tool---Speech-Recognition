@@ -1,0 +1,1 @@
+Welcome to Automatic Speech Recognition Tool offline test.
