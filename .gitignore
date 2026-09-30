@@ -1,0 +1,41 @@
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & build outputs
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Model & HuggingFace caches
+.cache/
+huggingface/
+
+# Environment & Config
+.env
+.env.local
+
+# Output files & temporary audio tests
+outputs/
+temp/
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+!samples/*.wav
+
+# IDEs & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
